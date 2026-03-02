@@ -14,11 +14,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.8"
+        python-version: "3.11"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r tests/requirement.txt
+        pip install -e .[dev]
     - name: Run lint in app/ and tests/
       run: |
         flake8 app/ tests/
@@ -33,11 +33,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.8"
+        python-version: "3.11"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r tests/requirement.txt
+        pip install -e .[dev]
     - name: Run tests
       run: |
         pytest tests/ -v --cov=app
@@ -52,7 +52,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.8"
+        python-version: "3.11"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[dev]
     - name: Build check
       run: |
-        python -m compileall app tests
+        python -m build
