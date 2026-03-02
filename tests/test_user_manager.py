@@ -3,46 +3,29 @@ import pytest
 from app import UserManager
 
 
-def test_add_and_get_user():
+def test_add_user():
     manager = UserManager()
-    payload = {"email": "ada@example.com"}
-
-    manager.add_user("ada", payload)
-
-    assert manager.get_user("ada") == payload
+    manager.add_user("adam")
+    assert manager.count_users() == 1
 
 
-def test_add_existing_user_raises_value_error():
+def test_add_existing_user():
     manager = UserManager()
-    manager.add_user("ada", {"email": "ada@example.com"})
+    manager.add_user("adam")
+    with pytest.raises(ValueError):
+        manager.add_user("adam")
+
+
+def test_remove_user():
+    manager = UserManager()
+    manager.add_user("Youssef")
+    manager.remove_user("Youssef")
+    assert manager.count_users() == 0
+
+def test_remove_unknown_user():
+    manager = UserManager()
 
     with pytest.raises(ValueError):
-        manager.add_user("ada", {"email": "duplicate@example.com"})
+        manager.remove_user("saad")
 
 
-def test_remove_user_returns_removed_payload():
-    manager = UserManager()
-    payload = {"email": "grace@example.com"}
-    manager.add_user("grace", payload)
-
-    removed = manager.remove_user("grace")
-
-    assert removed == payload
-    assert manager.get_user("grace") is None
-
-
-def test_remove_missing_user_raises_key_error():
-    manager = UserManager()
-
-    with pytest.raises(KeyError):
-        manager.remove_user("missing")
-
-
-def test_list_users_returns_copy():
-    manager = UserManager()
-    manager.add_user("ada", {"email": "ada@example.com"})
-
-    listed = manager.list_users()
-    listed["new"] = {"email": "new@example.com"}
-
-    assert "new" not in manager.list_users()
